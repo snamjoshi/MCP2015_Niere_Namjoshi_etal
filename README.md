@@ -1,7 +1,7 @@
 Data Files and Scripts for Niere and Namjoshi 2015, Molecular & Cellular Proteomics
 ---
 
-This repo contains data files, scripts, and figures that allow reproduction of the figures and analysis contained in the publication. All of the folders (except the ImageJ folder) contain both of the following files:
+This repo contains data files, scripts, and figures that allow reproduction of the figures and analysis contained in the publication. All of the folders (except the ImageJ folder) contain the following files:
 
 - **R script (.R)**: The R file in each of the subdirectories contains the relevant code used in cleaning/transforming data, analyzing data, and creating figures.
 - **Markdown file (.md)**: The markdown file in each of the subdirectories contains a guided explanation/rationale for the code in the R script file.
