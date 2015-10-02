@@ -1,0 +1,183 @@
+---
+title: "Data Processing for Niere and Namjoshi et al. 2015, MCP"
+author: "Sanjeev V Namjoshi"
+date: "Revised for GitHub: August 10, 2015"
+output: 
+  html_document: 
+    highlight: haddock
+    keep_md: yes
+---
+
+```{r set-options, echo=FALSE, cache=FALSE}
+options(width=90)
+```
+
+**Began writing code: January 28, 2014**  
+
+This document includes all the code used to process the normalized spectral
+counts. The raw data (normalized spectral counts) can be found in Supplemental Table
+1A. Copying the data from the cells B12:T756 will give you what you need to
+replicate this script exactly and produce the tidy data used to generate the
+figures seen in the paper. 
+
+First, load the plyr package
+
+```{r}
+library(plyr)
+```
+
+Load the data from your working directory.
+
+```{r}
+raw <- read.csv("RawData.csv", header = TRUE, stringsAsFactors = FALSE)
+```
+
+Cosmetic processing. Name the rows, clean up a bit, swap 0's to NA.
+
+```{r}
+names(raw) <- c("Protein", "LD1", "LD2", "LD3", 
+								           "LR1", "LR2", "LR3",
+								           "PD1", "PD2", "PD3",
+								           "PR1", "PR2", "PR3",
+								           "SD1", "SD2", "SD3",
+								           "SR1", "SR2", "SR3")
+
+rownames(raw) <- raw[, "Protein"]
+raw <- raw[, -1]
+raw[raw == 0] <- NA   # Changing NAs to zero to help with processing downstream
+```
+
+Split the table into separate data frames for rapa/DMSO
+
+```{r}
+lysDMSO <- raw[, 1:3]
+lysRapa <- raw[, 4:6]
+psdDMSO <- raw[, 7:9]
+psdRapa <- raw[, 10:12]
+solDMSO <- raw[, 13:15]
+solRapa <- raw[, 16:18]
+```
+
+Next, calculate the number of proteins that returned 0 spectral counts for each
+replicate. Remove the proteins from the data frame if they have 0 values for 2
+or 3 of 3 replicates. We consider these measurements to be unreliable.
+
+```{r}
+lysDMSO <- lysDMSO[which(apply(lysDMSO, 1, function(x) sum(is.na(x))) <= 1), ]
+lysRapa <- lysRapa[which(apply(lysRapa, 1, function(x) sum(is.na(x))) <= 1), ]
+psdDMSO <- psdDMSO[which(apply(psdDMSO, 1, function(x) sum(is.na(x))) <= 1), ]
+psdRapa <- psdRapa[which(apply(psdRapa, 1, function(x) sum(is.na(x))) <= 1), ]
+solDMSO <- solDMSO[which(apply(solDMSO, 1, function(x) sum(is.na(x))) <= 1), ]
+solRapa <- solRapa[which(apply(solRapa, 1, function(x) sum(is.na(x))) <= 1), ]
+```
+
+We now have a filtered list of proteins by fraction and treatment. Looking at
+all the proteins, we see that these numbers correspond to what we reported in
+the publication.
+
+```{r, echo = FALSE}
+data.frame(Fraction = c("lysDMSO", "lysRapa", "psdDMSO", "psdRapa", "solDMSO", "solRapa"),
+					 Proteins = c(506, 504, 459, 449, 548, 552))
+```
+
+Now find the row means for all fractions/treatments (to average the replicates)
+
+```{r}
+meanLysDMSO <- rowMeans(lysDMSO, na.rm = TRUE)
+meanLysRapa <- rowMeans(lysRapa, na.rm = TRUE)
+meanPsdDMSO <- rowMeans(psdDMSO, na.rm = TRUE)
+meanPsdRapa <- rowMeans(psdRapa, na.rm = TRUE)
+meanSolDMSO <- rowMeans(solDMSO, na.rm = TRUE)
+meanSolRapa <- rowMeans(solRapa, na.rm = TRUE)
+```
+
+Next we want to combine rapa and DMSO into one data frame where NA indicates
+that proteins was not found in that fraction/treatment. To do this we need to
+create a function that takes the DMSO data frame and the rapa data frame and
+combines them together.
+
+The ```mergeVec``` function below will accomplish this.
+
+```{r}
+mergeVec <- function(x, y) {
+	require(plyr)
+	
+	input <- list(as.data.frame(t(x)), as.data.frame(t(y)))
+	input <- t(do.call(rbind.fill, input))
+	
+	return(input)
+}
+```
+
+Now apply the ```mergeVec function``` to the data. We will add column names and
+change NA values back to 0.
+
+```{r}
+lysate <- mergeVec(meanLysDMSO, meanLysRapa)
+psd <- mergeVec(meanPsdDMSO, meanPsdRapa)
+soluble <- mergeVec(meanSolDMSO, meanSolRapa)
+
+colnames(lysate) <- c("DMSO", "Rapa")
+colnames(psd) <- c("DMSO", "Rapa")
+colnames(soluble) <- c("DMSO", "Rapa")
+
+lysate[is.na(lysate)] <- 0
+psd[is.na(psd)] <- 0
+soluble[is.na(soluble)] <- 0
+```
+
+Next we want to compute the fold changes for each fraction. This will require a
+function that divides the Rapa value by the DMSO value and then transforms the 
+data using log base 2. If the output returns Inf (divide by zero) or -Inf
+(log2(0)), then the output will be assigned the characters "HIGH" or "LOW"
+respectively.
+
+The ```foldChange``` function below will accomplish this.
+
+```{r}
+foldChange <- function(fraction) {
+	output <- as.data.frame(fraction[, 2] / fraction[, 1])
+	output <- log2(output)
+	
+	output[output == Inf, ] <- "HIGH"
+	output[output == -Inf, ] <- "LOW"
+	
+	return(output)
+}
+```
+
+Apply the ```foldChange``` function to the data.
+
+```{r}
+lysateFC <- foldChange(lysate)
+psdFC <- foldChange(psd)
+solubleFC <- foldChange(soluble)
+```
+
+Now merge all the lists together for each fraction using the ```mergeVec```
+function. We do this in two steps: first for lysate and PSD and finally adding
+in the soluble column.
+
+```{r}
+fullList <- as.data.frame(mergeVec(lysateFC, psdFC))
+fullList <- as.data.frame(mergeVec(fullList, solubleFC))
+```
+
+Last bit of ordering and cosmetic changes to get the data frame into a neat
+format.
+
+```{r}
+fullList <- fullList[ order(row.names(fullList)), ]
+fullList <- cbind(row.names(fullList), fullList)
+row.names(fullList) <- 1:length(fullList[, 1])
+colnames(fullList) <- c("Gene", "Lysate", "PSD", "Soluble")
+```
+
+Any finally, the full list of proteins, our processed data. The final data
+frame here (or in some cases the precursor data frames above) will be used
+downstream for other analysis found in the paper.
+
+```{r, echo = FALSE}
+print(fullList)
+```
+
