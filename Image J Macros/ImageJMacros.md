@@ -1,12 +1,6 @@
----
-title: "ImageJ Macros"
-author: "Sanjeev V Namjoshi"
-date: "Revised for GitHub: October 16, 2015"
-output: 
-  html_document: 
-    highlight: haddock
-    keep_md: yes
----
+# ImageJ Macros
+Sanjeev V Namjoshi  
+Revised for GitHub: October 16, 2015  
 
 **Macros written in late July and early August 2015**  
 
