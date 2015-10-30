@@ -1,12 +1,12 @@
 ###############################################################################
 ###############################################################################
 ## File: Fig2.R                                                              ##
-## Author: Sanjeev V Namjoshi                                                ##
+## Author: Sanjeev V Namjoshi (snamjoshi87@utexas.edu)                       ##
 ## Lab/Advisor: Kimberly Raab-Graham | University of Texas at Austin         ##
 ## Date: 2/24/14 | Revised for GitHub: 8/10/15                               ## 
-## Description: R code used to generate figure 2 for the paper titled XXX    ##
-## paper titled XXX published in Molecular Cell Proteomics XXX.              ##
-## Data files: "fullList" variable generated in DataProcessing.R             ##
+## Description: R code used to generate figure 2 for the paper published     ##
+##    in Molecular Cellular Proteomics, 2015                                 ##
+## Data files: "fullList.csv" variable generated in DataProcessing.R         ##
 ###############################################################################
 ###############################################################################
 

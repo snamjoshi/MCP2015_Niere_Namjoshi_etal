@@ -1,11 +1,11 @@
 ###############################################################################
 ###############################################################################
 ## File: SuppFigs.R                                                          ##
-## Author: Sanjeev V Namjoshi                                                ##
+## Author: Sanjeev V Namjoshi (snamjoshi87@utexas.edu)                       ##
 ## Lab/Advisor: Kimberly Raab-Graham | University of Texas at Austin         ##
 ## Date: 1/29/15 | Revised for GitHub: 8/10/15                               ## 
 ## Description: R code used to generate supplemental figures S1 and S2 for   ##
-## paper published in Molecular Cellular Proteomics.                         ##
+##    paper published in Molecular Cellular Proteomics, 2015                 ##
 ## Data Files: Use "RawData.csv" from Supplemental Table 1A, cells B12:T756  ##
 ###############################################################################
 ###############################################################################

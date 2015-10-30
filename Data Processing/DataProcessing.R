@@ -1,13 +1,14 @@
 ###############################################################################
 ###############################################################################
 ## File: DataProcessing.R                                                    ##
-## Author: Sanjeev V Namjoshi                                                ##
+## Author: Sanjeev V Namjoshi (snamjoshi87@utexas.edu)                       ##
 ## Lab/Advisor: Kimberly Raab-Graham | University of Texas at Austin         ##
 ## Date: 1/28/14 | Revised for GitHub: 8/10/15                               ## 
 ## Description: R code used to process data obtained from LC-MS/MS for the   ##
-## paper titled XXX published in Molecular Cell Proteomics XXX.              ##
+##    paper published in Molecular Cellular Proteomics, 2015                 ##
 ## Data files: Numerical data and protein names from Supplemental Table 1A.  ##
-## Copy cells B12:T756 from the Excel file to replicate this script exactly. ##
+##    Copy cells B12:T756 from the Excel file to replicate this script       ##
+##    exactly.                                                               ##
 ###############################################################################
 ###############################################################################
 

@@ -1,11 +1,11 @@
 ###############################################################################
 ###############################################################################
 ## File: Fig3.R                                                              ##
-## Author: Sanjeev V Namjoshi                                                ##
+## Author: Sanjeev V Namjoshi (snamjoshi87@utexas.edu)                       ##
 ## Lab/Advisor: Kimberly Raab-Graham | University of Texas at Austin         ##
 ## Date: 2/28/14 | Revised for GitHub: 8/10/15                               ## 
-## Description: R code used to generate figure 3 for the paper titled XXX    ##
-## paper titled XXX published in Molecular Cell Proteomics XXX.              ##
+## Description: R code used to generate figure 3 for the paper published     ##
+##    in Molecular Cellular Proteomics, 2015.                                ##
 ## Data files: Table S7A protiens (cells A12:C615) and "fullList.csv" which  ##
 ## is generated in DataProcessing.R and list of mitochontrial genes in       ##
 ## "mito.csv"                                                                ##
