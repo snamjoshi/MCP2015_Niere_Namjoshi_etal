@@ -16,7 +16,7 @@ This repo contains data files, scripts, and figures that allow reproduction of t
 - **Supplemental Figures**: Code/data used to generate supplemental figures 1 and 2
 - **Supplemental Tables**: Code/data used to generate some of the information in the supplemental tables. 
 - **ImageJ Macros**: ImageJ macros used to automate image analysis. Includes a script for automating JaCoP analysis.
-- **Analysis Tools: Useful functions that may aid in exploratory data analysis of the mass spectrometry results.
+- **Analysis Tools**: Useful functions that may aid in exploratory data analysis of the mass spectrometry results.
 
 Please contact me at (snamjoshi87@utexas.edu) for any questions or corrections.
 
